@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>150-Day Recalibrated Dual-Diurnal Matrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body { 
+            background-color: #020617; 
+            color: #f8fafc; 
+            font-family: system-ui, -apple-system, sans-serif;
+            background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 70%);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .matrix-card { transition: all 0.2s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Sticky Header -->
+    <header class="border-b border-slate-800 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl font-black tracking-wider text-amber-500 font-serif">150</div>
+                <div class="h-6 w-px bg-slate-800 hidden md:block"></div>
+                <div>
+                    <h1 class="text-md font-bold tracking-tight text-slate-100">The Expanded Gospel Matrix</h1>
+                    <p class="text-xs text-slate-400 font-mono">Deep-Pace Gospels (1 Chapter/Day Baseline) ➔ Accelerated Epistles</p>
+                </div>
+            </div>
+            
+            <!-- Progress Tracking Engine -->
+            <div class="flex flex-col items-end gap-1.5 w-full md:w-auto">
+                <div class="w-full md:w-64 bg-slate-900 rounded-full h-2 border border-slate-800 overflow-hidden">
+                    <div id="progressBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-500 w-0 transition-all duration-500"></div>
+                </div>
+                <div class="text-[11px] font-mono flex justify-between w-full text-slate-400">
+                    <span id="streakDays">🔥 Tracking System</span>
+                    <span id="completionMetrics" class="text-amber-400 font-bold">0 / 450 Tasks (0%)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Workspace Grid -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+        
+        <!-- Month Navigation -->
+        <aside class="lg:col-span-4 space-y-4">
+            <div class="bg-slate-900/40 backdrop-blur-sm p-4 rounded-2xl border border-slate-900 shadow-2xl sticky top-24">
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <h3 class="text-xs font-bold font-mono tracking-wider uppercase text-slate-400">
+                        Matrix Months
+                    </h3>
+                    <button onclick="clearSystemProgress()" class="text-[10px] font-mono text-rose-400 hover:text-rose-300 transition-colors">Reset Progress</button>
+                </div>
+                <nav id="monthBlockMenu" class="space-y-2"></nav>
+            </div>
+        </aside>
+
+        <!-- Main Timeline Workspace -->
+        <section class="lg:col-span-8 flex flex-col">
+            <div class="bg-slate-900/20 backdrop-blur-sm p-5 md:p-6 rounded-2xl border border-slate-900/60 shadow-2xl flex-grow flex flex-col justify-between min-h-[550px]">
+                
+                <div class="space-y-6 w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/60 pb-4">
+                        <div>
+                            <h2 class="text-base font-bold font-mono uppercase tracking-wider text-amber-400" id="currentSegmentTitle">
+                                Accessing Core Components...
+                            </h2>
+                            <p id="currentSegmentDescription" class="text-xs text-slate-500 font-mono mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <!-- Daily Matrix Card Stack -->
+                    <div id="matrixCardStack" class="space-y-4 overflow-y-auto max-h-[650px] pr-2">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Comprehensive Re-Engineered Logic Layer -->
+    <script>
+        const matrixSyllabus = [
+            { monthIdx: 0, name: "Month 1: Creed & Sacred Origin", desc: "CCC #1 - #567. Track: Matthew Chapters 1–28 (Expanded Pace).", daysCount: 30, cccBase: 1, cccStep: 19 },
+            { monthIdx: 1, name: "Month 2: Creed & Mystery of Salvation", desc: "CCC #568 - #1065. Track: Romans & Galatians (Rushed), then Mark Chapters 1–16.", daysCount: 30, cccBase: 568, cccStep: 17 },
+            { monthIdx: 2, name: "Month 3: Sacramental Dispensation", desc: "CCC #1066 - #1690. Track: 1 & 2 Corinthians (Rushed), then Luke Chapters 1–24.", daysCount: 30, cccBase: 1066, cccStep: 21 },
+            { monthIdx: 3, name: "Month 4: Moral Commandments & Virtues", desc: "CCC #1691 - #2557. Track: Ephesians through Hebrews (Rushed), then John Chapters 1–21.", daysCount: 30, cccBase: 1691, cccStep: 29 },
+            { monthIdx: 4, name: "Month 5: Sovereign Ascent of Prayer", desc: "CCC #2558 - #2865. Track: Accelerated General Epistles and Apocalypse.", daysCount: 30, cccBase: 2558, cccStep: 11 }
+        ];
+
+        // PERFECT SEQUENTIAL CALCULATOR
+        // Total Gospels: 89 Chapters. Allocated: 93 Days (near 1 ch/day pacing for Catena Aurea deep study)
+        // Total Epistles/Apocalypse: 171 Chapters. Allocated: 57 Days (3 ch/day accelerated pacing)
+        function generateDiurnalSchedule(globalDay) {
+            let trackingType = "";
+            let morningScripture = "";
+            let eveningStudyText = "";
+
+            if (globalDay <= 28) {
+                // MONTH 1: Matthew (Expanded Pace)
+                trackingType = "Gospel Segment";
+                morningScripture = `Matthew Chapter ${globalDay}`;
+                eveningStudyText = `Catena Aurea Patristic Commentary: Matthew Ch. ${globalDay}`;
+            } 
+            else if (globalDay <= 38) {
+                // MONTH 2 START: Accelerated Epistles Block (Romans + Galatians)
+                trackingType = "Epistle Segment";
+                let dayOffset = globalDay - 29; // Day 0 to 9 (10 days)
+                if (dayOffset <= 7) {
+                    morningScripture = `Romans Chapters ${dayOffset * 2 + 1}–${dayOffset * 2 + 2}`;
+                } else {
+                    let galOffset = dayOffset - 8; // 0 to 1
+                    morningScripture = `Galatians Chapters ${galOffset * 3 + 1}–${galOffset * 3 + 3}`;
+                }
+                eveningStudyText = "Spiritual Book";
+            } 
+            else if (globalDay <= 54) {
+                // MONTH 2 CONTINUED: Mark (Expanded Pace)
+                trackingType = "Gospel Segment";
+                let dayOffset = globalDay - 39 + 1; // 1 to 16
+                morningScripture = `Mark Chapter ${dayOffset}`;
+                eveningStudyText = `Catena Aurea Patristic Commentary: Mark Ch. ${dayOffset}`;
+            } 
+            else if (globalDay <= 63) {
+                // MONTH 2/3 INTERSECT: Accelerated Epistles Block (1 & 2 Corinthians)
+                trackingType = "Epistle Segment";
+                let dayOffset = globalDay - 55; // Day 0 to 8 (9 days)
+                if (dayOffset <= 5) {
+                    morningScripture = `1 Corinthians Chapters ${Math.min(16, dayOffset * 3 + 1)}–${Math.min(16, dayOffset * 3 + 3)}`;
+                } else {
+                    let cor2Offset = dayOffset - 6;
+                    morningScripture = `2 Corinthians Chapters ${Math.min(13, cor2Offset * 4 + 1)}–${Math.min(13, cor2Offset * 4 + 4)}`;
+                }
+                eveningStudyText = "Spiritual Book";
+            } 
+            else if (globalDay <= 87) {
+                // MONTH 3 CONTINUED: Luke (Expanded Pace)
+                trackingType = "Gospel Segment";
+                let dayOffset = globalDay - 64 + 1; // 1 to 24
+                morningScripture = `Luke Chapter ${dayOffset}`;
+                eveningStudyText = `Catena Aurea Patristic Commentary: Luke Ch. ${dayOffset}`;
+            } 
+            else if (globalDay <= 99) {
+                // MONTH 4 START: Accelerated Epistles Block (Ephesians through Hebrews)
+                trackingType = "Epistle Segment";
+                let dayOffset = globalDay - 88; // Day 0 to 11 (12 days)
+                if (dayOffset <= 1) {
+                    morningScripture = `Ephesians Chapters ${dayOffset * 3 + 1}–${dayOffset * 3 + 3}`;
+                } else if (dayOffset <= 2) {
+                    morningScripture = `Philippians Chapters 1–4`;
+                } else if (dayOffset <= 3) {
+                    morningScripture = `Colossians Chapters 1–4`;
+                } else if (dayOffset <= 5) {
+                    let thOffset = dayOffset - 4;
+                    morningScripture = `${thOffset === 0 ? "1" : "2"} Thessalonians Chapters 1–5`;
+                } else if (dayOffset <= 7) {
+                    let timOffset = dayOffset - 6;
+                    morningScripture = `${timOffset === 0 ? "1" : "2"} Timothy Chapters 1–6`;
+                } else if (dayOffset <= 8) {
+                    morningScripture = `Titus Chapters 1–3 & Philemon`;
+                } else {
+                    let hebOffset = dayOffset - 9; // 0 to 2
+                    morningScripture = `Hebrews Chapters ${Math.min(13, hebOffset * 4 + 1)}–${Math.min(13, hebOffset * 4 + 4)}`;
+                }
+                eveningStudyText = "Spiritual Book";
+            } 
+            else if (globalDay <= 120) {
+                // MONTH 4 CONTINUED: John (Expanded Pace)
+                trackingType = "Gospel Segment";
+                let dayOffset = globalDay - 100 + 1; // 1 to 21
+                morningScripture = `John Chapter ${dayOffset}`;
+                eveningStudyText = `Catena Aurea Patristic Commentary: John Ch. ${dayOffset}`;
+            } 
+            else {
+                // MONTH 5: Final Rushed Segment (Community Letters + Revelation)
+                trackingType = "Epistle & Apocalypse Segment";
+                let dayOffset = globalDay - 121; // 0 to 29 (30 days)
+                if (dayOffset <= 1) {
+                    morningScripture = `James Chapters ${dayOffset * 2.5 + 1}–${Math.min(5, dayOffset * 2.5 + 3)}`;
+                } else if (dayOffset <= 3) {
+                    morningScripture = `1 Peter Chapters ${(dayOffset - 2) * 2.5 + 1}–${Math.min(5, (dayOffset - 2) * 2.5 + 3)}`;
+                } else if (dayOffset <= 4) {
+                    morningScripture = `2 Peter Chapters 1–3`;
+                } else if (dayOffset <= 5) {
+                    morningScripture = `1, 2, 3 John & Jude`;
+                } else {
+                    let revOffset = dayOffset - 6; // 0 to 23
+                    morningScripture = `Revelation Chapters ${Math.min(22, revOffset * 1 + 1)}`;
+                }
+                eveningStudyText = "Spiritual Book";
+            }
+
+            return { trackingType, morningScripture, eveningStudyText, dailyPsalm: `Psalm ${globalDay}` };
+        }
+
+        let executionState = {};
+        let selectedMonthIndex = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadExecutionState();
+            renderNavigationMenu();
+            renderMatrixTimeline(selectedMonthIndex);
+            recalculateMetrics();
+        });
+
+        function loadExecutionState() {
+            const data = localStorage.getItem('recalibrated_matrix_v8');
+            if (data) executionState = JSON.parse(data);
+        }
+
+        function toggleComponent(key) {
+            executionState[key] = !executionState[key];
+            localStorage.setItem('recalibrated_matrix_v8', JSON.stringify(executionState));
+            recalculateMetrics();
+        }
+
+        function clearSystemProgress() {
+            if(confirm("Completely reset schedule progress memory layers?")) {
+                executionState = {};
+                localStorage.removeItem('recalibrated_matrix_v8');
+                recalculateMetrics();
+                renderMatrixTimeline(selectedMonthIndex);
+            }
+        }
+
+        function recalculateMetrics() {
+            const grandTotalTasks = 150 * 3;
+            let completedTasks = 0;
+
+            for(let m = 0; m < 5; m++) {
+                for(let d = 1; d <= 30; d++) {
+                    if(executionState[`m${m}_day${d}_morning`]) completedTasks++;
+                    if(executionState[`m${m}_day${d}_ccc`]) completedTasks++;
+                    if(executionState[`m${m}_day${d}_reading`]) completedTasks++;
+                }
+            }
+
+            const ratio = Math.round((completedTasks / grandTotalTasks) * 100) || 0;
+            document.getElementById('completionMetrics').innerText = `${completedTasks} / ${grandTotalTasks} Tasks ( ${ratio}% )`;
+            document.getElementById('progressBar').style.width = `${ratio}%`;
+        }
+
+        function renderNavigationMenu() {
+            const wrapper = document.getElementById('monthBlockMenu');
+            wrapper.innerHTML = '';
+
+            matrixSyllabus.forEach(block => {
+                const button = document.createElement('button');
+                button.id = `sidebar-btn-${block.monthIdx}`;
+                button.className = "w-full p-3.5 text-left bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl flex flex-col gap-1 text-xs font-mono font-bold tracking-wide text-slate-400";
+                button.onclick = () => renderMatrixTimeline(block.monthIdx);
+                button.innerHTML = `
+                    <span class="uppercase tracking-wider block text-[10px] text-amber-500/80">Month 0${block.monthIdx + 1}</span>
+                    <span class="text-slate-200 block text-xs truncate">${block.name.split(':')[1].trim()}</span>
+                `;
+                wrapper.appendChild(button);
+            });
+        }
+
+        function renderMatrixTimeline(targetIdx) {
+            selectedMonthIndex = targetIdx;
+            const meta = matrixSyllabus[targetIdx];
+
+            matrixSyllabus.forEach(m => {
+                const element = document.getElementById(`sidebar-btn-${m.monthIdx}`);
+                element.className = m.monthIdx === targetIdx 
+                    ? "w-full p-3.5 text-left bg-slate-900 border border-amber-500/30 rounded-xl flex flex-col gap-1 text-xs font-mono font-bold tracking-wide text-amber-400 shadow-lg"
+                    : "w-full p-3.5 text-left bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl flex flex-col gap-1 text-xs font-mono font-bold tracking-wide text-slate-400";
+            });
+
+            document.getElementById('currentSegmentTitle').innerText = meta.name;
+            document.getElementById('currentSegmentDescription').innerText = meta.desc;
+
+            const viewport = document.getElementById('matrixCardStack');
+            viewport.innerHTML = '';
+
+            for (let day = 1; day <= meta.daysCount; day++) {
+                const globalDayCalculation = (meta.monthIdx * 30) + day;
+                
+                const morningKey = `m${meta.monthIdx}_day${day}_morning`;
+                const cccKey = `m${meta.monthIdx}_day${day}_ccc`;
+                const readingKey = `m${meta.monthIdx}_day${day}_reading`;
+
+                const data = generateDiurnalSchedule(globalDayCalculation);
+                const cccStartPara = meta.cccBase + ((day - 1) * meta.cccStep);
+                const cccEndPara = Math.min(2865, cccStartPara + meta.cccStep - 1);
+
+                const card = document.createElement('div');
+                card.className = "matrix-card p-4 rounded-xl border bg-slate-950/70 border-slate-900/60 hover:border-slate-800 shadow-sm space-y-3";
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-900/60 pb-1.5 text-[10px] font-mono">
+                        <div>
+                            <span class="text-amber-500 font-bold uppercase tracking-wider">Day ${day}</span>
+                            <span class="text-slate-500">(Global Day ${globalDayCalculation})</span>
+                        </div>
+                        <span class="${data.trackingType === 'Gospel Segment' ? 'text-amber-400 font-bold' : 'text-slate-400'} font-mono tracking-wider">[Track: ${data.trackingType}]</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] font-mono">
+                        <!-- 1. MORNING SCRIPTURE -->
+                        <div class="bg-slate-950/90 border border-slate-900 p-3 rounded-xl flex items-start gap-2">
+                            <input type="checkbox" id="${morningKey}" ${executionState[morningKey] ? 'checked' : ''} onclick="toggleComponent('${morningKey}')" class="mt-0.5 w-4 h-4 rounded border-slate-800 bg-slate-900 accent-amber-500">
+                            <label for="${morningKey}" class="cursor-pointer select-none">
+                                <span class="block text-[9px] font-black text-emerald-400 tracking-wider uppercase">☀️ Morning Word</span>
+                                <div class="text-slate-200 mt-1">${data.morningScripture}</div>
+                                <div class="text-slate-400 text-[10px] mt-0.5">${data.dailyPsalm}</div>
+                            </label>
+                        </div>
+
+                        <!-- 2. EVENING CATECHISM -->
+                        <div class="bg-slate-950/90 border border-slate-900 p-3 rounded-xl flex items-start gap-2">
+                            <input type="checkbox" id="${cccKey}" ${executionState[cccKey] ? 'checked' : ''} onclick="toggleComponent('${cccKey}')" class="mt-0.5 w-4 h-4 rounded border-slate-800 bg-slate-900 accent-amber-500">
+                            <label for="${cccKey}" class="cursor-pointer select-none">
+                                <span class="block text-[9px] font-black text-indigo-400 tracking-wider uppercase">🌙 Evening Dogma</span>
+                                <div class="text-slate-200 mt-1">CCC ${cccStartPara} – ${cccEndPara}</div>
+                            </label>
+                        </div>
+
+                        <!-- 3. EVENING READING EXTRA -->
+                        <div class="bg-slate-950/90 border border-slate-900 p-3 rounded-xl flex items-start gap-2 ${data.trackingType === 'Gospel Segment' ? 'border-amber-500/10 bg-amber-500/5' : ''}">
+                            <input type="checkbox" id="${readingKey}" ${executionState[readingKey] ? 'checked' : ''} onclick="toggleComponent('${readingKey}')" class="mt-0.5 w-4 h-4 rounded border-slate-800 bg-slate-900 accent-amber-500">
+                            <label for="${readingKey}" class="cursor-pointer select-none">
+                                <span class="block text-[9px] font-black text-amber-400 tracking-wider uppercase">📜 Evening Reading</span>
+                                <div class="text-slate-200 mt-1 leading-tight">${data.eveningStudyText}</div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+                viewport.appendChild(card);
+            }
+        }
+    </script>
+</body>
+</html>
